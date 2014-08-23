@@ -58,8 +58,8 @@ def format_timedelta(d):
     seconds = d.seconds
     minutes = math.floor(seconds / 60.)
     seconds -= minutes * 60
-    hours = math.floor(seconds / 60.)
-    seconds -= hours * 60
+    hours = math.floor(minutes / 60.)
+    minutes -= hours * 60
 
     ret = ""
     if hours == 1:
