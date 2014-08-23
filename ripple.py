@@ -7,7 +7,8 @@ import unittest
 from subprocess import call
 from datetime import datetime
 
-DB_FILE = os.path.join(os.path.dirname(__file__), "ripple.txt")
+DB_FILE_DEFAULT = os.path.expanduser(os.path.join("~", ".ripple.txt"))
+DB_FILE = os.environ.get('RIPPLE_DB', DB_FILE_DEFAULT)
 DB_TMP_FILE = DB_FILE + '.tmp'
 DB_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
