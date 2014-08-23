@@ -30,7 +30,7 @@ def loads_date(d):
     return datetime.strptime(d, DB_DATE_FORMAT)
 
 def format_date(d):
-    age = datetime.now() - d
+    age = datetime.now().date() - d.date()
     date = d.strftime("%Y-%m-%d")
     if age.days == 0:
         date = 'today'
