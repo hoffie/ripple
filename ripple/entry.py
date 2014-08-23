@@ -90,6 +90,10 @@ class Entry(object):
         self.start = datetime.now()
         self.end = None
 
+    @property
+    def duration(self):
+        return self.end - self.start
+
     def format(self):
         """
         Formats this Entry for easy human readability
@@ -100,8 +104,7 @@ class Entry(object):
         ret += "started %s, " % format_date(self.start)
         if self.end:
             ret += "finished %s" % format_date(self.end)
-            duration = self.end - self.start
-            ret += " (%s)" % format_timedelta(duration)
+            ret += " (%s)" % format_timedelta(self.duration)
         else:
             ret += "until now"
         ret += ": %s" % (self.text or '(no text)')
