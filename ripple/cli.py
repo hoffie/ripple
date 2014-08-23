@@ -1,3 +1,6 @@
+# The cli module contains all commands which are supported by the
+# command line interface. dispatch() is the entry point which selects the
+# proper method.
 import os
 from .db import get_db, save_db, DB_FILE
 from .entry import Entry
@@ -15,10 +18,10 @@ def help(args):
     edit
 """)
 
-def track(args):
+def start_tracking(args):
     db = get_db()
-    for entry in db.get_running_entries():
-        print("note: finishing running entry:")
+    for entry in db.get_unfinished_entries():
+        print("note: ending unfinished entry:")
         print("\t%s" % entry.format())
         entry.end = datetime.now()
 
@@ -26,7 +29,7 @@ def track(args):
     db.append(entry)
     save_db(db)
 
-def end(args):
+def stop_tracking(args):
     db = get_db()
     entry = db.get_most_recent_entry()
     if not entry:
@@ -38,7 +41,7 @@ def end(args):
         entry.text = (entry.text + ' '.join(args)).strip()
     save_db(db)
 
-def ls(args):
+def list_entries(args):
     db = get_db()
     tags = []
     for arg in args:
@@ -52,22 +55,22 @@ def ls(args):
     for entry in entries:
         print(entry.format())
 
-def edit(args):
+def open_in_editor(args):
     call([EDITOR, DB_FILE])
 
 def dispatch(args):
-    f = unknown
+    f = unknown_command
     if not args or args[0] in ('ls', 'list'):
-        f = ls
+        f = list_entries
     elif args[0] in ('on', 'in', 'start', 'track'):
-        f = track
+        f = start_tracking
     elif args[0] in ('end', 'out', 'stop', 'done'):
-        f = end
+        f = stop_tracking
     elif args[0] in ('edit',):
-        f = edit
+        f = open_in_editor
     elif args[0] in ('help', '?'):
         f = help
     return f(args[1:])
 
-def unknown(args):
+def unknown_command(args):
     abort("unknown command")

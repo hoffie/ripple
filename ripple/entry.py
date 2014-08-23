@@ -11,12 +11,31 @@ ENTRY_MATCHER = re.compile(ENTRY_MATCHER_RE)
 split_words = re.compile('\s+').split
 
 def dumps_date(d):
+    """
+    Encodes the given datetime object for usage in the internal
+    representation.
+
+    @param datetime.datetime d
+    @return str
+    """
     return d.strftime(DATE_FORMAT)
 
 def loads_date(d):
+    """
+    Decodes a datetime object from the given internal string
+    representation
+
+    @param str d
+    """
     return datetime.strptime(d, DATE_FORMAT)
 
 def format_date(d):
+    """
+    Formats the given datetime object for better human readability
+
+    @param datetime.datetime d
+    @return str
+    """
     age = datetime.now().date() - d.date()
     date = d.strftime("%Y-%m-%d")
     if age.days == 0:
@@ -30,6 +49,12 @@ def format_date(d):
     return "%s %s" % (date, time)
 
 def format_timedelta(d):
+    """
+    Formats the given timedelta object for good human readability
+
+    @param timedelta d
+    @return str
+    """
     seconds = d.seconds
     minutes = math.floor(seconds / 60.)
     seconds -= minutes * 60
@@ -54,6 +79,11 @@ def format_timedelta(d):
 class LoadError(RuntimeError): pass
 
 class Entry(object):
+    """
+    Entry is a single entity (i.e. one activity) with start and end time,
+    optionally some text (containing +Foo tags) and an optional id
+    (passed externally).
+    """
     def __init__(self, text='', id=None):
         self.id = id
         self.text = text
@@ -61,6 +91,11 @@ class Entry(object):
         self.end = None
 
     def format(self):
+        """
+        Formats this Entry for easy human readability
+
+        @return str
+        """
         ret = "Task %s, " % (self.id or '?')
         ret += "started %s, " % format_date(self.start)
         if self.end:
@@ -73,6 +108,11 @@ class Entry(object):
         return ret
 
     def dumps(self):
+        """
+        Encodes this Entry for storage in a database
+
+        @return str
+        """
         start = dumps_date(self.start)
         if self.end:
             end = dumps_date(self.end)
@@ -87,6 +127,10 @@ class Entry(object):
 
     @classmethod
     def loads(cls, s, id=None):
+        """
+        Creates a new entry from the given string representation
+        (e.g. from a database). Optionally an id can be set.
+        """
         m = ENTRY_MATCHER.match(s)
         if not m:
             raise LoadError("unable to parse the entry")
@@ -98,6 +142,11 @@ class Entry(object):
         return e
 
     def get_tags(self):
+        """
+        Returns a set of all tags which this Entry is associated with.
+
+        @return set
+        """
         tags = set()
         for word in split_words(self.text):
             if not word.startswith('+') or not word[1:]:
