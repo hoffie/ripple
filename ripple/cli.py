@@ -4,6 +4,7 @@
 import os
 from .db import get_db, save_db, DB_FILE
 from .entry import Entry
+from .filters import build_tag_filter, build_date_filter
 from .log import abort
 from subprocess import call
 from datetime import datetime
@@ -44,13 +45,11 @@ def stop_tracking(args):
 def list_entries(args):
     db = get_db()
     tags = []
-    for arg in args:
-        if arg.startswith('+'):
-            tags.append(arg[1:])
-        else:
-            tags.append(arg)
-
-    entries = db.get_entries_with_tags(*tags)
+    tag_filter, args = build_tag_filter(args)
+    date_filter, args = build_date_filter(args)
+    entries = db.get_entries()
+    entries = tag_filter(entries)
+    entries = date_filter(entries)
 
     for entry in entries:
         print(entry.format())

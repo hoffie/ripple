@@ -75,6 +75,12 @@ class DB(object):
                 x += 1
         return db
 
+    def get_entries(self):
+        """
+        Returns an iterator over all entries
+        """
+        return self.entries
+
     def get_unfinished_entries(self):
         """
         Returns a generator over all entries which have not been
@@ -95,20 +101,3 @@ class DB(object):
         if self.entries:
             return self.entries[-1]
         return None
-
-    def get_entries_with_tags(self, *tags):
-        """
-        Returns all entries which match all of the given tags.
-
-        @param str tag1
-        @param str tag2...
-        @return generator[Entry]
-        """
-        for entry in self.entries:
-            skip = False
-            for wanted_tag in tags:
-                if wanted_tag.lower() not in entry.get_tags():
-                    skip = True
-                    break
-            if not skip:
-                yield entry
