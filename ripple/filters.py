@@ -27,7 +27,6 @@ def build_date_filter(args):
     for arg in args:
         if arg == '@today':
             dates.add(date.today())
-            continue
         elif arg == '@yesterday':
             dates.add(date.today() - timedelta(days=1))
         elif arg[0] == '@' and is_date(arg[1:]):
@@ -37,7 +36,8 @@ def build_date_filter(args):
                 raise InvalidDateError(
                     "unable to parse the given date %s" % arg[1:])
             dates.add(d)
-        remaining_args.append(arg)
+        else:
+            remaining_args.append(arg)
 
     if dates:
         filter = partial(get_entries_with_dates, dates)
