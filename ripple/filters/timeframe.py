@@ -1,7 +1,7 @@
 import re
 from functools import partial
-from datetime import date, datetime, timedelta
-from .common import InvalidDateError, DATE_FORMAT, all_entries
+from datetime import date, timedelta
+from .common import DATE_FORMAT, all_entries, parse_date
 
 is_year = re.compile(r'^\d{4}\Z').match
 is_year_and_month = re.compile(r'^\d{4}-\d{1,2}\Z').match
@@ -15,12 +15,6 @@ def get_last_day_of_month(d):
         d = d.replace(month=d.month + 1, day=1)
     d -= timedelta(days=1)
     return d
-
-def parse_date(val, format):
-    try:
-        return datetime.strptime(val, format).date()
-    except ValueError:
-        raise InvalidDateError("unable to parse %s" % val)
 
 def build_timeframe_filter(args):
     remaining_args = []

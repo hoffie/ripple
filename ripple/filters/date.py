@@ -1,7 +1,7 @@
 import re
 from functools import partial
-from datetime import date, datetime, timedelta
-from .common import all_entries, InvalidDateError
+from datetime import date, timedelta
+from .common import all_entries, parse_date, DATE_FORMAT
 
 DATE_RE = r"^\d{4}-\d{1,2}-\d{1,2}\Z"
 is_date = re.compile(DATE_RE).match
@@ -15,11 +15,7 @@ def build_date_filter(args):
         elif arg == '@yesterday':
             dates.add(date.today() - timedelta(days=1))
         elif arg[0] == '@' and is_date(arg[1:]):
-            try:
-                d = datetime.strptime(arg[1:], DATE_FORMAT).date()
-            except Exception:
-                raise InvalidDateError(
-                    "unable to parse the given date %s" % arg[1:])
+            d = parse_date(arg[1:], DATE_FORMAT)
             dates.add(d)
         else:
             remaining_args.append(arg)
