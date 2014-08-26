@@ -4,7 +4,8 @@
 import os
 from .db import get_db, save_db, DB_FILE
 from .entry import Entry
-from .filters import build_tag_filter, build_date_filter
+from .filters import (build_tag_filter, build_date_filter,
+    build_timeframe_filter)
 from .log import abort, warn
 from subprocess import call
 from datetime import datetime
@@ -47,12 +48,14 @@ def list_entries(args):
     tags = []
     tag_filter, args = build_tag_filter(args)
     date_filter, args = build_date_filter(args)
+    timeframe_filter, args = build_timeframe_filter(args)
     if args:
         warn("the following arguments have not been considered: %s" % args)
 
     entries = db.get_entries()
     entries = tag_filter(entries)
     entries = date_filter(entries)
+    entries = timeframe_filter(entries)
 
     for entry in entries:
         print(entry.format())
