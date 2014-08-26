@@ -7,6 +7,8 @@ DATE_RE = r"^\d{4}-\d{1,2}-\d{1,2}\Z"
 is_date = re.compile(DATE_RE).match
 is_year = re.compile(r'^\d{4}\Z').match
 is_year_and_month = re.compile(r'^\d{4}-\d{1,2}\Z').match
+is_timeframe = re.compile(
+    r'^\d{4}-\d{1,2}-\d{1,2}\.\.\d{4}-\d{1,2}-\d{1,2}\Z').match
 DATE_FORMAT = "%Y-%m-%d"
 
 class InvalidDateError(RuntimeError): pass
@@ -79,6 +81,16 @@ def build_timeframe_filter(args):
                 raise InvalidDateError("unable to parse %s" % arg[1:])
             first_day = d
             last_day = get_last_day_of_month(first_day)
+        elif arg.startswith('@') and is_timeframe(arg[1:]):
+            a, b = arg[1:].split('..', 1)
+            try:
+                first_day = datetime.strptime(a, DATE_FORMAT).date()
+            except ValueError:
+                raise InvalidDateError("unable to parse %s" % a)
+            try:
+                last_day = datetime.strptime(b, DATE_FORMAT).date()
+            except ValueError:
+                raise InvalidDateError("unable to parse %s" % b)
         else:
             remaining_args.append(arg)
             continue
