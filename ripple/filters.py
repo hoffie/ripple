@@ -100,7 +100,6 @@ def build_timeframe_filter(args):
         filter = partial(get_entries_within_timeframes, timeframes)
     else:
         filter = all_entries
-    print timeframes
     return filter, remaining_args
 
 def get_entries_within_timeframes(timeframes, entries):
@@ -109,7 +108,6 @@ def get_entries_within_timeframes(timeframes, entries):
             if (timeframe[0] <= entry.start.date() <= timeframe[1] or
                 (entry.end and timeframe[0] <= entry.end.date() <= timeframe[1])):
                 yield entry
-
 
 def get_entries_with_dates(dates, entries):
     for entry in entries:
