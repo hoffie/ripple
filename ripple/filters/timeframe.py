@@ -16,6 +16,12 @@ def get_last_day_of_month(d):
     d -= timedelta(days=1)
     return d
 
+def parse_date(val, format):
+    try:
+        return datetime.strptime(val, format).date()
+    except ValueError:
+        raise InvalidDateError("unable to parse %s" % val)
+
 def build_timeframe_filter(args):
     remaining_args = []
     timeframes = set()
@@ -24,35 +30,32 @@ def build_timeframe_filter(args):
         if arg == '@week':
             first_day = today - timedelta(days=today.weekday())
             last_day = first_day + timedelta(days=7)
+
         elif arg == '@month':
             first_day = today.replace(day=1)
             last_day = get_last_day_of_month(first_day)
+
         elif arg == '@year':
             first_day = today.replace(month=1, day=1)
             last_day = today.replace(month=12, day=31)
+
         elif arg.startswith('@') and is_year(arg[1:]):
             first_day = date(year=int(arg[1:]), month=1, day=1)
             last_day = first_day.replace(month=12, day=31)
+
         elif arg.startswith('@') and is_year_and_month(arg[1:]):
-            try:
-                d = datetime.strptime(arg[1:], '%Y-%m').date()
-            except ValueError:
-                raise InvalidDateError("unable to parse %s" % arg[1:])
-            first_day = d
+            first_day = parse_date(arg[1:], '%Y-%m')
             last_day = get_last_day_of_month(first_day)
+
         elif arg.startswith('@') and is_timeframe(arg[1:]):
             a, b = arg[1:].split('..', 1)
-            try:
-                first_day = datetime.strptime(a, DATE_FORMAT).date()
-            except ValueError:
-                raise InvalidDateError("unable to parse %s" % a)
-            try:
-                last_day = datetime.strptime(b, DATE_FORMAT).date()
-            except ValueError:
-                raise InvalidDateError("unable to parse %s" % b)
+            first_day = parse_date(a, DATE_FORMAT)
+            last_day = parse_date(b, DATE_FORMAT)
+
         else:
             remaining_args.append(arg)
             continue
+
         timeframes.add((first_day, last_day))
 
     if timeframes:
