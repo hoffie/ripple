@@ -62,8 +62,12 @@ def build_timeframe_filter(args):
     return filter, remaining_args
 
 def get_entries_within_timeframes(timeframes, entries):
-    for entry in entries:
-        for timeframe in timeframes:
-            if (timeframe[0] <= entry.start.date() <= timeframe[1] or
-                (entry.end and timeframe[0] <= entry.end.date() <= timeframe[1])):
-                yield entry
+    return [entry for entry in entries
+        if entry_is_within_timeframes(entry, timeframes)]
+
+def entry_is_within_timeframes(entry, timeframes):
+    for start, end in timeframes:
+        if (start <= entry.start.date() <= end or
+            (entry.end and start <= entry.end.date() <= end)):
+            return True
+    return False
