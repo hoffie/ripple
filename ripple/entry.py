@@ -122,7 +122,7 @@ class Entry(object):
         else:
             end = KEYWORD_ENTRY_RUNNING
 
-        ret = "%s %s: %s" % (
+        ret = "%s\t%s: %s" % (
             start,
             end,
             self.text)
