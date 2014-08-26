@@ -2,8 +2,16 @@ import os
 from .log import warn
 from .entry import Entry, LoadError
 
+def resolve_symlink(path):
+    target = os.readlink(path)
+    if target[0] != '/':
+        target = os.path.join(os.path.dirname(path), target)
+    return target
+
 DB_FILE_DEFAULT = os.path.expanduser(os.path.join("~", ".ripple.txt"))
 DB_FILE = os.environ.get('RIPPLE_DB', DB_FILE_DEFAULT)
+if os.path.islink(DB_FILE):
+    DB_FILE = resolve_symlink(DB_FILE)
 DB_TMP_FILE = DB_FILE + '.tmp'
 
 def get_db():
