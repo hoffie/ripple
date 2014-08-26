@@ -7,6 +7,13 @@ DATE_RE = r"^\d{4}-\d{1,2}-\d{1,2}\Z"
 is_date = re.compile(DATE_RE).match
 
 def build_date_filter(args):
+    """
+    Returns a filter which selects entries from the given dates
+    only.
+
+    @param list(str) args, e.g. ["@2014-08-03", "@today", "unrelated"]
+    @return (callable filter, list remaining_args)
+    """
     remaining_args = []
     dates = set()
     for arg in args:
@@ -28,6 +35,14 @@ def build_date_filter(args):
 
 
 def get_entries_with_dates(dates, entries):
+    """
+    The actual filter which returns all entries whose
+    start or end date matches one of the given dates.
+
+    @param set dates
+    @param iterable entries
+    @return generator[Entry]
+    """
     for entry in entries:
         if (entry.start.date() in dates or
             entry.end and entry.end.date() in dates):

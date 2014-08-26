@@ -9,6 +9,13 @@ is_timeframe = re.compile(
     r'^\d{4}-\d{1,2}-\d{1,2}\.\.\d{4}-\d{1,2}-\d{1,2}\Z').match
 
 def get_last_day_of_month(d):
+    """
+    Takes a date object and returns another date object of the
+    last day of the same month.
+
+    @param datetime.date d
+    @return datetime.date
+    """
     if d.month == 12:
         d = d.replace(year=d.year + 1, month=1, day=1)
     else:
@@ -17,6 +24,13 @@ def get_last_day_of_month(d):
     return d
 
 def build_timeframe_filter(args):
+    """
+    Returns a filter which selects entries within the given
+    time frames only.
+
+    @param list(str) args, e.g. ["@week", "@month", "@year", "unrelated"]
+    @return (callable filter, list remaining_args)
+    """
     remaining_args = []
     timeframes = set()
     today = date.today()
@@ -59,10 +73,26 @@ def build_timeframe_filter(args):
     return filter, remaining_args
 
 def get_entries_within_timeframes(timeframes, entries):
+    """
+    Returns all entries which are within one of the given
+    timeframes.
+
+    @param set((start, end)) timeframes
+    @param iterable entries
+    @return generator[Entry]
+    """
     return [entry for entry in entries
         if entry_is_within_timeframes(entry, timeframes)]
 
 def entry_is_within_timeframes(entry, timeframes):
+    """
+    Returns whether the given entry is within one of the
+    given time frames.
+
+    @param Entry entry
+    @param set((start, end)) timeframes
+    @return bool
+    """
     for start, end in timeframes:
         if (start <= entry.start.date() <= end or
             (entry.end and start <= entry.end.date() <= end)):
