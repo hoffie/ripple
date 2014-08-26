@@ -70,7 +70,7 @@ def format_timedelta(d):
     if minutes:
         ret += "%d min " % minutes
 
-    if seconds:
+    if seconds or not ret:
         ret += "%d sec " % seconds
 
     return ret.strip()

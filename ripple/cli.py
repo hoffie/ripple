@@ -3,12 +3,12 @@
 # proper method.
 import os
 from .db import get_db, save_db, DB_FILE
-from .entry import Entry
+from .entry import Entry, format_timedelta
 from .filters import (build_tag_filter, build_date_filter,
     build_timeframe_filter)
 from .log import abort, warn
 from subprocess import call
-from datetime import datetime
+from datetime import datetime, timedelta
 
 EDITOR = os.environ.get('EDITOR', 'vim')
 
@@ -57,8 +57,14 @@ def list_entries(args):
     entries = date_filter(entries)
     entries = timeframe_filter(entries)
 
+    duration = timedelta(seconds=0)
+
     for entry in entries:
+        duration += entry.duration
         print(entry.format())
+
+    print("\nduration of all entries shown: %s" %
+        format_timedelta(duration))
 
 def open_in_editor(args):
     call([EDITOR, DB_FILE])
