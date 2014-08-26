@@ -14,10 +14,37 @@ EDITOR = os.environ.get('EDITOR', 'vim')
 
 def help(args):
     print("""Usage: ripple.py COMMAND
-    start
-    stop
-    list
+    ... with COMMAND being one of:
+
+    start [optional comment with +one +or +more +tags]
+        Starts a new task. Ends any still running tasks first.
+
+    stop [optional comment with +one +or +more +tags]
+        Ends the currently running task.
+
+    list [optional filters]
+        Lists all entries and displays the total duration of all shown entries,
+        potentially filtered using the following syntax:
+
+        Tag-based:
+            +university
+            +university +ws2014 (entries must match ALL tags!)
+
+        Date-based:
+            @today
+            @yesterday
+            @2014-08-01
+
+        Timeframe-based:
+            @week
+            @month
+            @year
+            @2014-08
+            @2014
+            @2014-08-02..2014-08-04
+
     edit
+        Opens the database file in your $EDITOR.
 """)
 
 def start_tracking(args):
