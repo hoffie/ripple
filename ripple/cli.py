@@ -67,7 +67,7 @@ def stop_tracking(args):
         abort("nothing to end!")
     entry.end = datetime.now()
     if args:
-        entry.text = (entry.text + ' '.join(args)).strip()
+        entry.text = (' '.join([entry.text] + args)).strip()
     save_db(db)
 
 def list_entries(args):
