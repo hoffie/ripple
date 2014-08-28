@@ -92,7 +92,8 @@ class Entry(object):
 
     @property
     def duration(self):
-        return self.end - self.start
+        end = self.end or datetime.now()
+        return end - self.start
 
     def format(self):
         """
