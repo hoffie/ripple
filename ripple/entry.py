@@ -65,10 +65,9 @@ def format_timedelta(d):
     ret = ""
     if days > 0:
         ret += "%d day(s) " % days
-    elif hours == 1:
-        ret += "one hour "
-    elif hours > 1:
-        ret += "%d hours " % hours
+
+    if hours > 0:
+        ret += "%d hour(s) " % hours
 
     if minutes:
         ret += "%d min " % minutes
