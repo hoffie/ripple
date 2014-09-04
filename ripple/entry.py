@@ -60,9 +60,12 @@ def format_timedelta(d):
     seconds -= minutes * 60
     hours = math.floor(minutes / 60.)
     minutes -= hours * 60
+    days = d.days
 
     ret = ""
-    if hours == 1:
+    if days > 0:
+        ret += "%d day(s) " % days
+    elif hours == 1:
         ret += "one hour "
     elif hours > 1:
         ret += "%d hours " % hours
