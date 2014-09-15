@@ -107,9 +107,9 @@ class Entry(object):
         ret += "started %s, " % format_date(self.start)
         if self.end:
             ret += "finished %s" % format_date(self.end)
-            ret += " (%s)" % format_timedelta(self.duration)
         else:
             ret += "until now"
+        ret += " (%s)" % format_timedelta(self.duration)
         ret += ": %s" % (self.text or '(no text)')
         return ret
 
