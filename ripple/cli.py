@@ -50,9 +50,9 @@ def help(args):
 def start_tracking(args):
     db = get_db()
     for entry in db.get_unfinished_entries():
+        entry.end = datetime.now()
         print("note: ending unfinished entry:")
         print("\t%s" % entry.format())
-        entry.end = datetime.now()
 
     entry = Entry(text=' '.join(args))
     db.append(entry)
