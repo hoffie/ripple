@@ -69,6 +69,7 @@ def stop_tracking(args):
     if args:
         entry.text = (' '.join([entry.text] + args)).strip()
     save_db(db)
+    print("\t%s" % entry.format())
 
 def list_entries(args):
     db = get_db()
