@@ -89,6 +89,8 @@ class DB(object):
             if entry:
                 db.entries.append(entry)
                 x += 1
+
+        db.entries.sort(cmp=lambda a, b: cmp(a.start, b.start))
         return db
 
     def get_entries(self):
