@@ -55,6 +55,9 @@ Storage
 Entries are kept in ~/.ripple.txt by default.
 Changing that is either possible using a symlink or by setting the RIPPLE_DB environment variable.
 
+Reading from multiple files is also possible using the RIPPLE_DB_DIR variable.
+This allows for per-machine ripple files (avoiding sync conflicts) while still showing totals.
+
 Portability
 -----------
 Only tested on Linux so far.
