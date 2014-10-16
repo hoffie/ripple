@@ -1,19 +1,35 @@
 import os
+from itertools import chain
 from .log import warn
 from .entry import Entry, LoadError
 
 DB_FILE_DEFAULT = os.path.expanduser(os.path.join("~", ".ripple.txt"))
 DB_FILE = os.path.realpath(os.environ.get('RIPPLE_DB', DB_FILE_DEFAULT))
+DB_DIR = os.environ.get('RIPPLE_DB_DIR', None)
+if DB_DIR and os.path.isdir(DB_DIR):
+    DB_DIR = os.path.realpath(DB_DIR)
+else:
+    DB_DIR = None
 DB_TMP_FILE = DB_FILE + '.tmp'
 
 def get_db():
     """
     Opens the database file and returns the resulting instance.
     """
+    files = set()
+    if DB_DIR:
+        files = set([os.path.join(DB_DIR, file) for file in os.listdir(DB_DIR)])
     if os.path.isfile(DB_FILE):
-        with open(DB_FILE, 'r+') as handle:
-            return DB.load(handle)
-    return DB()
+        files.add(DB_FILE)
+
+    if not files:
+        return DB()
+
+    handles = []
+    for file in files:
+        handles.append(open(file, 'r+'))
+
+    return DB.load(chain(*handles))
 
 def save_db(db):
     """
