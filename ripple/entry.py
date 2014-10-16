@@ -103,8 +103,7 @@ class Entry(object):
 
         @return str
         """
-        ret = "Task %s, " % (self.id or '?')
-        ret += "started %s, " % format_date(self.start)
+        ret = "* started %s, " % format_date(self.start)
         if self.end:
             ret += "finished %s" % format_date(self.end)
         else:
