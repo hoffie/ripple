@@ -48,7 +48,7 @@ def help(args):
 """)
 
 def start_tracking(args):
-    db = get_db()
+    db = get_db(write=True)
     for entry in db.get_unfinished_entries():
         entry.end = datetime.now()
         print("note: ending unfinished entry:")
@@ -59,7 +59,7 @@ def start_tracking(args):
     save_db(db)
 
 def stop_tracking(args):
-    db = get_db()
+    db = get_db(write=True)
     entry = db.get_most_recent_entry()
     if not entry:
         abort("nothing to end (no previous entries found)")

@@ -12,12 +12,12 @@ else:
     DB_DIR = None
 DB_TMP_FILE = DB_FILE + '.tmp'
 
-def get_db():
+def get_db(write=False):
     """
     Opens the database file and returns the resulting instance.
     """
     files = set()
-    if DB_DIR:
+    if DB_DIR and not write:
         files = set([os.path.join(DB_DIR, file) for file in os.listdir(DB_DIR)])
     if os.path.isfile(DB_FILE):
         files.add(DB_FILE)
